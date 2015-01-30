@@ -1,8 +1,13 @@
 package SupaHotFyaBot;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.lang.*;
@@ -18,14 +23,27 @@ import twitter4j.auth.AccessToken;
 
 public class TwitterActions {
 
-	private final static String API_KEY = "eSIPam8mM6IsbhxXUxwnyJQEp";
-	private final static String API_SECRET = "3XFvpoesBs0vBjONjYnuzf4nsWqpRnRalXSAV60R7F7nRu0Qag";
-	
 	
 	public Twitter start() throws TwitterException, IOException{
+		
+		int i = 0;
+		String[] key_array = new String[4];		// array to hold the keys from the file 
+		
+		BufferedReader br = new BufferedReader(new FileReader("/home/oscaricardo/Desktop/Keys.txt"));
+		String line;
+		while ((line = br.readLine()) != null) {
+		   key_array[i] = line;
+		   i++;
+		}
+		br.close();
+		
+		System.out.println(Arrays.toString(key_array));	// print the key array just to make sure it's alright 
+	
+		
+		
 		Twitter twitter = new TwitterFactory().getInstance();	// for future reference, this instance has all teh authorisation associated with it 
 		
-		twitter.setOAuthConsumer(API_KEY, API_SECRET);
+		twitter.setOAuthConsumer(key_array[0], key_array[1]);
 		
 	
 		String accessToken = getSavedAccessToken();
@@ -49,9 +67,12 @@ public class TwitterActions {
 	}
 	
 	
-	private String getSavedAccessToken(){
+	private String getSavedAccessToken() throws IOException{
 		// consider this as a method to get your previously saved Access Token
 		// should change this to read input from a file
+		
+		
+		
 		String access_token = "2996704816-1RRBHj6kMJqTB7Cirn4UN9BqAmyFysGmW4dXLNo";
 		return access_token;
 	}
@@ -102,8 +123,8 @@ public class TwitterActions {
 		Twitter global_twitter = new TwitterActions().start();	// creates a global twitter instance, which is authenticated
 		
 		
-		// new TwitterActions().postTweet(global_twitter);
+		 new TwitterActions().postTweet(global_twitter);
 		// new TwitterActions().getTimeline(global_twitter);
-		new TwitterActions().sendDirectMessage(global_twitter);
+		// new TwitterActions().sendDirectMessage(global_twitter);
 	}
 }
