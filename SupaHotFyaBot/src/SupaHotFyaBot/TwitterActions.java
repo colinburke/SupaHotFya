@@ -24,7 +24,7 @@ import twitter4j.auth.AccessToken;
 public class TwitterActions {
 
 	
-	public Twitter start() throws TwitterException, IOException{
+	public static void start() throws TwitterException, IOException{
 		
 		int i = 0;
 		String[] key_array = new String[4];		// array to hold the keys from the file 
@@ -35,6 +35,7 @@ public class TwitterActions {
 		   key_array[i] = line;
 		   i++;
 		}
+		
 		br.close();
 		
 		System.out.println(Arrays.toString(key_array));	// print the key array just to make sure it's alright 
@@ -45,29 +46,19 @@ public class TwitterActions {
 		
 		twitter.setOAuthConsumer(key_array[0], key_array[1]);
 		
-	
 		String accessToken = getSavedAccessToken();
 		String accessTokenSecret = getSavedAccessTokenSecret();
 		
 		AccessToken oathAccessToken = new AccessToken(accessToken, accessTokenSecret);
 		
 		twitter.setOAuthAccessToken(oathAccessToken);
-		/*
-		// I'm reading your Timeline
 		
-		List<Status> statuses = twitter.getHomeTimeline();
-	    for (Status status : statuses) {
-	    	System.out.println("Sent by @" + status.getUser().getScreenName() + "-" + status.getUser().getName() + "/n" + status.getText() + "/n");
-	    } 
-	    
-	    */
-		
-		return twitter;
+	
 		
 	}
 	
 	
-	private String getSavedAccessToken() throws IOException{
+	private static String getSavedAccessToken() throws IOException{
 		// consider this as a method to get your previously saved Access Token
 		// should change this to read input from a file
 		
@@ -77,7 +68,7 @@ public class TwitterActions {
 		return access_token;
 	}
 	
-	private String getSavedAccessTokenSecret(){
+	private static String getSavedAccessTokenSecret(){
 		// consider this as a method to get your previously saved Secret Access Token
 		// should change this to read input from a file
 		String access_token_secret = "BhP8fZ8jbz3XXEPcSMdm0RGyxcRCl5oNxAj8vEJm74OrW";
@@ -85,7 +76,10 @@ public class TwitterActions {
 	}
 	
 	
-	private void postTweet(Twitter twitter) throws Exception{
+	public void postTweet() throws Exception{
+		
+		Twitter twitter = new TwitterFactory().getInstance();
+		
 		System.out.println("Please enter a message to tweet: ");
 		Scanner keyboard = new Scanner(System.in);
 		String message = keyboard.nextLine();
@@ -95,8 +89,10 @@ public class TwitterActions {
 		
 	}
 	
-	private void getTimeline(Twitter twitter) throws Exception{
-	    List<Status> statuses = twitter.getHomeTimeline();
+	private void getTimeline() throws Exception{
+		Twitter twitter = new TwitterFactory().getInstance();
+		
+		List<Status> statuses = twitter.getHomeTimeline();
 	    System.out.println("Showing home timeline: /n/n");
 	    
 	    for (Status status : statuses) {
@@ -106,8 +102,12 @@ public class TwitterActions {
 
 	}
 	
-	private void sendDirectMessage(Twitter twitter) throws Exception{
+	private void sendDirectMessage() throws Exception{
 	 
+		TwitterActions.start();
+		
+		Twitter twitter = TwitterFactory.getSingleton();
+		
 	    System.out.println("Who do you want to send a direct message to?: ");
 	    Scanner keyboard = new Scanner(System.in);
 	    String recipientId = keyboard.nextLine();
@@ -120,10 +120,13 @@ public class TwitterActions {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		Twitter global_twitter = new TwitterActions().start();	// creates a global twitter instance, which is authenticated
+		new TwitterActions().start();		// makes a new TwitterActions object
+	
+		//	start().twitter.postTweet();
 		
+
 		
-		 new TwitterActions().postTweet(global_twitter);
+	
 		// new TwitterActions().getTimeline(global_twitter);
 		// new TwitterActions().sendDirectMessage(global_twitter);
 	}
