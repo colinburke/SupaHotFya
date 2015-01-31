@@ -1,49 +1,32 @@
 // Colin 
-// This class is for authorising the Twitter object
+// This class is for authenticating the Twitter object
 
 
 package SupaHotFyaBot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Arrays;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.lang.*;
-
-import twitter4j.DirectMessage;
-import twitter4j.ResponseList;
-import twitter4j.Status;
-import twitter4j.StatusUpdate;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
+import java.io.IOException;
+
 
 public class TwitterAuth {
 
-	public static Twitter twitter = new TwitterFactory().getInstance();
+	public static Twitter twitter = new TwitterFactory().getInstance();	// Twitter object to be used throughout the session
+	final static String[] key_array = new String[4];	// array to hold the keys from the file 
 	
-	public static void authorise() throws TwitterException, IOException{
-		Twitter twitter = getTwitterObject();
+	public static void authenticate() throws TwitterException, IOException{
+		Twitter twitter = getTwitterObject();	// get the Twitter object to be used
 		
 		int i = 0;
-		String[] key_array = new String[4];		// array to hold the keys from the file 
 		
-		BufferedReader br = new BufferedReader(new FileReader("/home/oscaricardo/Desktop/Keys.txt"));	// read in the keys from the file (currently holds 4 but we only use 2)
+		// read in the keys from the file
+		// currently the array hold four keys, but we only use two
+		BufferedReader br = new BufferedReader(new FileReader("/home/oscaricardo/Desktop/Keys.txt"));	
 		String line;
 		while ((line = br.readLine()) != null) {
 		   key_array[i] = line;
@@ -52,9 +35,9 @@ public class TwitterAuth {
 		
 		br.close();
 		
-		System.out.println(Arrays.toString(key_array));	// print the key array just to make sure it's alright 
+		// System.out.println(Arrays.toString(key_array));	// print the key array just to make sure it's working properly 
 		
-		twitter.setOAuthConsumer(key_array[0], key_array[1]);
+		twitter.setOAuthConsumer(key_array[0], key_array[1]);	
 		
 		String accessToken = getSavedAccessToken();
 		String accessTokenSecret = getSavedAccessTokenSecret();
@@ -64,20 +47,17 @@ public class TwitterAuth {
 		twitter.setOAuthAccessToken(oathAccessToken);
 	}
 	
+	// method to get the previously stored Access Token
 	private static String getSavedAccessToken() throws IOException{
 		// consider this as a method to get your previously saved Access Token
-		// should change this to read input from a file
 		
-		
-		
-		String access_token = "2996704816-1RRBHj6kMJqTB7Cirn4UN9BqAmyFysGmW4dXLNo";
+		String access_token = key_array[2];
 		return access_token;
 	}
 	
+	// method to get the previously stored Secret Access Token
 	private static String getSavedAccessTokenSecret(){
-		// consider this as a method to get your previously saved Secret Access Token
-		// should change this to read input from a file
-		String access_token_secret = "BhP8fZ8jbz3XXEPcSMdm0RGyxcRCl5oNxAj8vEJm74OrW";
+		String access_token_secret = key_array[3];
 		return access_token_secret;
 	}
 	
